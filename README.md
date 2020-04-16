@@ -2,13 +2,13 @@
 Repository to migrate Matlab code to Python.
 
 # Run Ideal Bayesian Searcher in Matlab
-To run the IBS or any of the variants, run the *run\_main.m* script inside the dynamic_model folder (in MatlabCode folder). This script allows to set different search strategies and priors, the options (check BayesianSaliencyModel for more info) are:
+To run the IBS model or any of the variants, run the *run\_main.m* script inside the dynamic_model folder (in MatlabCode folder). This script allows to set different search strategies and priors, the possible parameters (check BayesianSaliencyModel.m for more info) are:
 
-* Searcher
+* **Searcher**
 	1. Correlation IBS 
 	2. Geisler's IBS
 	3. Greedy
-* Prior
+* **Prior**
 	1. DeepGaze2
 	2. MLNet
 	3. SAM-ResNet
@@ -17,5 +17,10 @@ To run the IBS or any of the variants, run the *run\_main.m* script inside the d
 	6. Flat
 	7. Noisy
 
+For more info about the parameters check *BayesianSaliencyModel.m*.
+
 # Matlab Version
 The model was tested on Matlab 2016 and higher.
+
+## TODO MATLAB CODE
+- Add images to gitignore?
