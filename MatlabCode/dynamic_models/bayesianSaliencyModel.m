@@ -6,11 +6,11 @@ function bayesianSaliencyModel(cfg)
     % cfg.dinamic_model   = Dinamic model name: 'greedy' | 'geisler' | 'correlation'
     % cfg.img_quantity    = Maximum image quantity
     % cfg.nsaccades_thr   = Maximum number of saccades allowed by the model
-    % cfg.delta           = Size of the grid cells
+    % cfg.delta           = Size of the grid cells, used value is 32
     % cfg.target_size     = Size of the target
     % cfg.image_size      = Size of the image
-    % cfg.a               = 
-    % cfg.b               = 
+    % cfg.a               = Scale factor, used value is 3
+    % cfg.b               = Additive shifth, used value is 4
     % cfg.out_models_path = path where the results of the models are saved
     % cfg.initial_fix     = Initial fixation of the image expressed in pixels
     % cfg.imgnum          = Number of the image
