@@ -27,7 +27,7 @@ To run the IBS model or any of the variants, run the *run\_main.m* script inside
 
 For more info about the parameters check *BayesianSaliencyModel.m*.
 
-# Use Searchers with your different dataset
+## Use Searchers with different datasets
 
 ## TODO MATLAB CODE
 - Add images to gitignore
