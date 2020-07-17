@@ -4,7 +4,7 @@ function [idx_x, idx_y] = bayesian_model(cfg, T, p, visibility_map)
         for ky = 1:cfg.size_prior(2)
             for ix = 1:cfg.size_prior(1)
                 for iy = 1:cfg.size_prior(2)
-                    tmp(ix, iy) = conditionalProbabilityIntegral(ix, iy, kx, ky, T, p, visibility_map, alpha);
+                    tmp(ix, iy) = conditionalProbabilityIntegral(ix, iy, kx, ky, T, p, visibility_map, alpha, cfg.norm_cdf_table);
                 end
             end
             accum(kx,ky,T) = nansum(nansum(p(:,:,T) .* tmp));

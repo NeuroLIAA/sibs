@@ -44,6 +44,28 @@ function main(incfg)
         else
             cfg.iniimg = incfg.iniimg;
         end
+        if ~isfield(incfg,'cache_path') || isempty(incfg.cache_path) 
+            cfg.cache_path = '../cache/';
+        else
+            cfg.cache_path = incfg.cache_path;
+        end
+        
+        if ~isfield(incfg,'norm_cdf_tolerance') || isempty(incfg.norm_cdf_tolerance) 
+            cfg.norm_cdf_tolerance = 0.001;       
+        else
+            cfg.norm_cdf_tolerance = incfg.norm_cdf_tolerance;
+        end
+        
+        filename = [cfg.cache_path 'normcdf_table_' sprintf('%g',cfg.norm_cdf_tolerance) '.mat'];
+        if exist(filename,'file')
+            load(filename,'norm_cdf_table');
+            cfg.norm_cdf_table = norm_cdf_table;
+        else
+            norm_cdf_table = create_normcdf_lut(cfg.norm_cdf_tolerance);
+            save(filename,'norm_cdf_table')
+        end
+        cfg.norm_cdf_table = norm_cdf_table;
+        
     end
     
     cfg.img_quantity    = 134;

@@ -45,7 +45,14 @@ function W = templateResponse(cfg, visibility_map)
         tmp = dir(['../data_images/templates/' cfg.imgname(1:end-4) '*']);
         template = imread(['../data_images/templates/' tmp.name]);
 
-        correlation = normxcorr2(template, img);
+        filename = [cfg.cache_path 'normxcorr2_' tmp.name cfg.imgname '.mat'];
+        if exist(filename,'file')
+            load(filename,'correlation');
+        else
+            correlation = normxcorr2(template, img);
+            save(filename,'correlation')
+        end
+        
         correlation = correlation(cfg.target_size(1)/2:size(correlation, 1)-cfg.target_size(1)/2, cfg.target_size(1)/2:size(correlation, 2)-cfg.target_size(1)/2);
         correlation = reduceMatrix(correlation, cfg.delta, 'max');
 
