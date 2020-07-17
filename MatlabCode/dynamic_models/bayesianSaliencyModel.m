@@ -119,5 +119,5 @@ function bayesianSaliencyModel(cfg)
 		mkdir([cfg.out_models_path, '/cfg'])
 	end
 	save([cfg.out_models_path, '/cfg/cfg_' num2str(cfg.imgnum) '.mat'], 'cfg');
-   
+   keyboard
 end
