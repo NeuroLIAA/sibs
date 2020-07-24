@@ -33,7 +33,8 @@ function result = conditionalProbabilityIntegral(ix, iy, kx, ky, T, p, visibilit
 
 %    phiW = exp(-0.5 .* wRange .* wRange / sqrt(2 * pi)); % MAL
     phiW = exp(-0.5 .* wRange .* wRange) / sqrt(2 * pi); % BIEN
-    if isstruct(norm_cdf_table)
+    
+    if ~isempty(fields(norm_cdf_table))
         normcdf_tmp = interp1(norm_cdf_table.x,norm_cdf_table.y,tmp,'nearest','extrap');
     else
         normcdf_tmp = normcdf(tmp);
