@@ -14,19 +14,19 @@ clear all
 % incfg.iniimg 	      = 77;
 % main(incfg)
 % 
-% incfg.dinamic_model   = 'greedy';
-% incfg.iniimg 	      = 1;
-% main(incfg)
-
-% Flat
-incfg.dinamic_model   = 'correlation';
-incfg.iniimg 	      = 134;
-incfg.delta           = 32;
-incfg.a               = 3;            % integers (?)   
-incfg.b               = 4;            % integers (?)
-incfg.static_model    = 'flat';
-incfg.norm_cdf_tolerance = 0.001;
+incfg.dinamic_model   = 'greedy';
+incfg.iniimg 	      = 1;
 main(incfg)
+
+% % Flat
+% incfg.dinamic_model   = 'correlation';
+% incfg.iniimg 	      = 134;
+% incfg.delta           = 32;
+% incfg.a               = 3;            % integers (?)   
+% incfg.b               = 4;            % integers (?)
+% incfg.static_model    = 'flat';
+% incfg.norm_cdf_tolerance = 0.00;
+% main(incfg)
 % 
 % incfg.dinamic_model   = 'greedy';
 % incfg.iniimg 	      = 1;
