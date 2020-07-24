@@ -45,6 +45,7 @@ function W = templateResponse(cfg, visibility_map)
         tmp = dir(['../data_images/templates/' cfg.imgname(1:end-4) '*']);
         template = imread(['../data_images/templates/' tmp.name]);
 
+        % Cache of normxcorr2 template results
         filename = [cfg.cache_path 'normxcorr2_' tmp.name cfg.imgname '.mat'];
         if exist(filename,'file')
             load(filename,'correlation');
