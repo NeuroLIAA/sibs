@@ -44,6 +44,7 @@ function main(incfg)
         else
             cfg.iniimg = incfg.iniimg;
         end
+        
         if ~isfield(incfg,'cache_path') || isempty(incfg.cache_path) 
             cfg.cache_path = '../cache/';
         else
@@ -56,15 +57,26 @@ function main(incfg)
             cfg.norm_cdf_tolerance = incfg.norm_cdf_tolerance;
         end
         
-        filename = [cfg.cache_path 'normcdf_table_' sprintf('%g',cfg.norm_cdf_tolerance) '.mat'];
-        if exist(filename,'file')
-            load(filename,'norm_cdf_table');
+        if cfg.norm_cdf_tolerance>0
+            filename = [cfg.cache_path 'normcdf_table_' sprintf('%g',cfg.norm_cdf_tolerance) '.mat'];
+            if exist(filename,'file')
+                load(filename,'norm_cdf_table');               
+            else
+                norm_cdf_table = create_normcdf_lut(cfg.norm_cdf_tolerance);
+                save(filename,'norm_cdf_table');
+            end
             cfg.norm_cdf_table = norm_cdf_table;
         else
-            norm_cdf_table = create_normcdf_lut(cfg.norm_cdf_tolerance);
-            save(filename,'norm_cdf_table')
+            cfg.norm_cdf_table = struct();
         end
-        cfg.norm_cdf_table = norm_cdf_table;
+        
+        if ~isfield(incfg,'seed') || isempty(incfg.seed)
+            cfg.seed = 1234;
+        else
+            cfg.seed = incfg.seed;
+        end
+            
+        
         
     end
     
@@ -93,7 +105,7 @@ function main(incfg)
         cfg.imgnum        = imgnum;
         cfg.imgname       = initial_fixations(imgnum).image;    
         cfg.target_center = [target_positions(imgnum).matched_row target_positions(imgnum).matched_column] + cfg.target_size/2;
-        
+        rng(cfg.seed)
         
         % Run bayesian model
         tic;
