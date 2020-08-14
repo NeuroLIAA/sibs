@@ -61,8 +61,6 @@ function bayesianSaliencyModel(cfg)
     s = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     f = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     p = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
-    tmp = zeros(cfg.size_prior(1), cfg.size_prior(2));
-    accum = zeros(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     W = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     
     fprintf('   Saccade: ');

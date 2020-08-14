@@ -1,8 +1,8 @@
-function result = conditionalProbabilityIntegral(ix, iy, kx, ky, T, p, visibility_map, alpha, norm_cdf_table)
+function result = conditionalProbabilityIntegral(ix, iy, kx, ky, p, visibility_map, alpha, norm_cdf_table)
 %    m = (-2*log(p(:,:,T) / p(ix,iy,T)) + visibility_map(:,:,kx,ky).^2 + visibility_map(ix,iy,kx,ky).^2) ./ (2 * visibility_map(:,:,kx,ky)); % MAL
 %    b =  visibility_map(ix,iy,kx,ky) ./  visibility_map(:,:,kx,ky); % MAL
 
-    b = (-2*log(p(:,:,T) / p(ix,iy,T)) + visibility_map(:,:,kx,ky).^2 + visibility_map(ix,iy,kx,ky).^2) ./ (2 * visibility_map(:,:,kx,ky)); % BIEN
+    b = (-2*log(p(:,:) / p(ix,iy)) + visibility_map(:,:,kx,ky).^2 + visibility_map(ix,iy,kx,ky).^2) ./ (2 * visibility_map(:,:,kx,ky)); % BIEN
     m =  visibility_map(ix,iy,kx,ky) ./  visibility_map(:,:,kx,ky); % BIEN
 
     % we ensure that the product is only for i != j (normcdf(1000000) = 1)
