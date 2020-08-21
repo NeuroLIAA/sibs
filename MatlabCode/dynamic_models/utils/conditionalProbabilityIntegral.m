@@ -38,8 +38,9 @@ function result = conditionalProbabilityIntegral(ix, iy, kx, ky, p, visibility_m
         normcdf_tmp = interp1(norm_cdf_table.x,norm_cdf_table.y,tmp,'nearest','extrap');
     else
         normcdf_tmp = normcdf(tmp);
-    end 
-        point = phiW .* (prod(alpha * normcdf_tmp, 1) / alpha);
+    end
+    
+    point = phiW .* (prod(alpha * normcdf_tmp, 1) / alpha);
 
     result = trapz(wRange, point);
 end

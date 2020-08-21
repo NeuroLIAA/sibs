@@ -75,7 +75,12 @@ function main(incfg)
         else
             cfg.seed = incfg.seed;
         end
-            
+        
+        if ~isfield(incfg,'parfor') || isempty(incfg.parfor)
+            cfg.parfor = 0;
+        else
+            cfg.parfor = incfg.parfor;
+        end
         
         
     end
@@ -93,8 +98,8 @@ function main(incfg)
         mkdir(sprintf('%s/probability_map/',cfg.out_models_path));
         mkdir(sprintf('%s/scanpath/',cfg.out_models_path));
     end
-        
-    img_time          = [];
+
+    img_time = [];
     fprintf('\n\na: %d; b: %d; Delta: %d \n', cfg.a, cfg.b, cfg.delta);
     
     % Main loop. Run bayesian model for each image
