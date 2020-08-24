@@ -51,6 +51,11 @@ function main(incfg)
             cfg.cache_path = incfg.cache_path;
         end
         
+        if ~exist(cfg.cache_path, 'dir')
+            disp('Creating cache folder...')
+            mkdir(cfg.cache_path)
+        end
+        
         if ~isfield(incfg,'norm_cdf_tolerance') || isempty(incfg.norm_cdf_tolerance) 
             cfg.norm_cdf_tolerance = 0.001;       
         else
