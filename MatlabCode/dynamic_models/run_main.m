@@ -25,14 +25,15 @@ profile on
 
 % Flat
 incfg.dinamic_model   = 'correlation';
-incfg.iniimg 	      = 134;
+incfg.iniimg 	      = 130;
+incfg.endimg          = 132;
 incfg.delta           = 32;
 incfg.a               = 3;            % integers (?)   
 incfg.b               = 4;            % integers (?)
 incfg.static_model    = 'flat';
 incfg.norm_cdf_tolerance = 0.0001;
 % incfg.norm_cdf_tolerance = 0;
-incfg.parfor = 0;
+incfg.parfor = 1;
 main(incfg)
 
 p = profile('info');
