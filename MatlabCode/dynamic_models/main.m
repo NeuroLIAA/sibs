@@ -51,6 +51,11 @@ function main(incfg)
             cfg.cache_path = incfg.cache_path;
         end
         
+        if ~exist(cfg.cache_path, 'dir')
+            disp('Creating cache folder...')
+            mkdir(cfg.cache_path)
+        end
+        
         if ~isfield(incfg,'norm_cdf_tolerance') || isempty(incfg.norm_cdf_tolerance) 
             cfg.norm_cdf_tolerance = 0.001;       
         else
@@ -82,7 +87,6 @@ function main(incfg)
             cfg.parfor = incfg.parfor;
         end
         
-        
     end
     
     cfg.img_quantity    = 134;
@@ -90,7 +94,13 @@ function main(incfg)
     cfg.target_size     = [72 72];
     cfg.image_size      = [768 1024];
     cfg.out_models_path = ['../out_models/' cfg.static_model '/' cfg.dinamic_model '/a_' num2str(cfg.a) '_b_' num2str(cfg.b) '_tam_celda_' num2str(cfg.delta)];
-
+    
+    if ~isfield(incfg,'endimg') || isempty(incfg.endimg)     
+        cfg.endimg    = 134;
+    else
+        cfg.endimg    = incfg.endimg;
+    end
+    
     if ~exist(cfg.out_models_path,'dir') 
         mkdir(cfg.out_models_path);
         mkdir(sprintf('%s/cfg/',cfg.out_models_path));
@@ -103,21 +113,40 @@ function main(incfg)
     fprintf('\n\na: %d; b: %d; Delta: %d \n', cfg.a, cfg.b, cfg.delta);
     
     % Main loop. Run bayesian model for each image
-    for imgnum = cfg.iniimg:cfg.img_quantity
-        % Parameter configuration for each image
+    % If not image param setted, run 
+    if ~isfield(incfg,'image') || isempty(incfg.image) 
+        for imgnum = cfg.iniimg:cfg.endimg
+            % Parameter configuration for each image
+            fprintf('\nImage: %d  \n', imgnum);
+            cfg.initial_fix   = initial_fixations(imgnum).initial_fix;
+            cfg.imgnum        = imgnum;
+            cfg.imgname       = initial_fixations(imgnum).image;    
+            cfg.target_center = [target_positions(imgnum).matched_row target_positions(imgnum).matched_column] + cfg.target_size/2;
+            rng(cfg.seed)
+
+            % Run bayesian model
+            tic;
+            bayesianSaliencyModel(cfg); % This function saves ...
+            tiempo = toc;
+            fprintf('\ntiempo: %d  \n', tiempo);
+            img_time = [img_time tiempo];
+        end
+        save([cfg.out_models_path , '/cfg/time.mat'], 'img_time');
+    else
+        imgnum = incfg.image;
         fprintf('\nImage: %d  \n', imgnum);
         cfg.initial_fix   = initial_fixations(imgnum).initial_fix;
         cfg.imgnum        = imgnum;
         cfg.imgname       = initial_fixations(imgnum).image;    
         cfg.target_center = [target_positions(imgnum).matched_row target_positions(imgnum).matched_column] + cfg.target_size/2;
         rng(cfg.seed)
-        
+
         % Run bayesian model
         tic;
         bayesianSaliencyModel(cfg); % This function saves ...
         tiempo = toc;
         fprintf('\ntiempo: %d  \n', tiempo);
         img_time = [img_time tiempo];
+        save([cfg.out_models_path , '/cfg/time.mat'], 'img_time');
     end
-    save([cfg.out_models_path , '/cfg/time.mat'], 'img_time');
 end
