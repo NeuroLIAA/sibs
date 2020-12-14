@@ -4,7 +4,6 @@ This repository contains the code for the paper *Modeling human visual search: A
 <!--
 Please cite with the following BibTeX:
 -->
-Disclaimer: In the future this repository will migrate from Matlab code to Python.
 
 # Environment
 The model was tested on Matlab 2016 and higher.
