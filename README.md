@@ -29,4 +29,6 @@ For more info about the parameters check *BayesianSaliencyModel.m*.
 ## Use Searchers with different datasets
 
 ## TODO MATLAB CODE
+- Add analysis code
+- Update readme
 - Add images to gitignore
