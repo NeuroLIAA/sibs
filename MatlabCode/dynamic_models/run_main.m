@@ -24,16 +24,32 @@ profile on
 % main(incfg)
 
 % Flat
+% incfg.dinamic_model   = 'correlation';
+% incfg.iniimg 	      = 130;
+% incfg.endimg          = 132;
+% incfg.delta           = 32;
+% incfg.a               = 3;            % integers (?)   
+% incfg.b               = 4;            % integers (?)
+% incfg.static_model    = 'flat';
+% incfg.norm_cdf_tolerance = 0.0001;
+% % incfg.norm_cdf_tolerance = 0;
+% incfg.parfor = 0;
+% main(incfg)
+% 
+% p = profile('info');
+% save profiles/interp p
+
+% Flat - only one image
 incfg.dinamic_model   = 'correlation';
-incfg.iniimg 	      = 130;
-incfg.endimg          = 132;
+incfg.iniimg 	      = 1;
+%incfg.image           = 1;
 incfg.delta           = 32;
 incfg.a               = 3;            % integers (?)   
 incfg.b               = 4;            % integers (?)
-incfg.static_model    = 'flat';
-incfg.norm_cdf_tolerance = 0.0001;
-% incfg.norm_cdf_tolerance = 0;
-incfg.parfor = 1;
+incfg.static_model    = 'sam-resnet';
+%incfg.norm_cdf_tolerance = 0.0001;
+incfg.norm_cdf_tolerance = 0;
+incfg.parfor = 0;
 main(incfg)
 
 p = profile('info');
