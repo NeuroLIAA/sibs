@@ -22,7 +22,8 @@ function visibility_map = visibilityMapSimplified(cfg, mode)
         
     if strcmp(mode, 'gaussian')
         Sigma = [4000 0; 0 2600];
-        x1 = linspace(0, cfg.image_size(2), cfg.size_prior(2)); x2 = linspace(0, cfg.image_size(1), cfg.size_prior(1));
+        x1 = linspace(0, cfg.image_size(2), cfg.size_prior(2)); 
+        x2 = linspace(0, cfg.image_size(1), cfg.size_prior(1));
 
         [X1,X2] = meshgrid(x1,x2);
 
