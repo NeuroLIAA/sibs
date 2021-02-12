@@ -1,3 +1,6 @@
 # Folders
 MatlabCode/out_models/
 MatlabCode/cache/
+
+# Out models and zips
+*.zip

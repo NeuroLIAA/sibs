@@ -24,13 +24,13 @@ profile on
 % main(incfg)
 
 % Flat
-incfg.dinamic_model   = 'correlation';
-incfg.iniimg 	      = 130;
-incfg.endimg          = 132;
+incfg.dinamic_model   = 'geisler';
+incfg.iniimg 	      = 1;
+incfg.endimg          = 134;
 incfg.delta           = 32;
 incfg.a               = 3;            % integers (?)   
 incfg.b               = 4;            % integers (?)
-incfg.static_model    = 'flat';
+incfg.static_model    = 'deepgaze';
 incfg.norm_cdf_tolerance = 0.0001;
 % incfg.norm_cdf_tolerance = 0;
 incfg.parfor = 1;
