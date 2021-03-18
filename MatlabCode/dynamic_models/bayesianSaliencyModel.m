@@ -43,24 +43,24 @@ function bayesianSaliencyModel(cfg)
         return; 
     end
         
+    
     % load or create visibility map
-    if exist(['visibility_map_x_' num2str(cfg.size_prior(1)) '_y_' num2str(cfg.size_prior(2)) '_gaussian.mat'])
-       load(['visibility_map_x_' num2str(cfg.size_prior(1)) '_y_' num2str(cfg.size_prior(2)) '_gaussian.mat']);
+    filename = [cfg.cache_path 'visibility_map_x_' num2str(cfg.size_prior(1)) '_y_' num2str(cfg.size_prior(2)) '_gaussian.mat'];
+    if exist(filename,'file')
+       load(filename,'visibility_map', 'max_x', 'max_y');
     else
         visibility_map = visibilityMapSimplified(cfg, 'gaussian');
         visibility_map = visibility_map - min(visibility_map(:));
         visibility_map = visibility_map / max(visibility_map(:)) * 3;
         max_x = cfg.size_prior(1);
         max_y = cfg.size_prior(2);
-        save(['visibility_map_x_' num2str(cfg.size_prior(1)) '_y_' num2str(cfg.size_prior(2)) '_gaussian.mat'], 'visibility_map', 'max_x', 'max_y');
+        save(filename, 'visibility_map', 'max_x', 'max_y');
     end
     
     % initialize variables
     s = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     f = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     p = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
-    tmp = zeros(cfg.size_prior(1), cfg.size_prior(2));
-    accum = zeros(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     W = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     
     fprintf('   Saccade: ');
@@ -110,12 +110,12 @@ function bayesianSaliencyModel(cfg)
     end
     
    
-    	if ~exist([cfg.out_models_path, '/scanpath'],'dir')
+    if ~exist([cfg.out_models_path, '/scanpath'],'dir')
 		mkdir([cfg.out_models_path, '/scanpath'])
 	end
 	save([cfg.out_models_path, '/scanpath/scanpath_' num2str(cfg.imgnum) '.mat'], 'scanpath');
        
-    	if ~exist([cfg.out_models_path, '/cfg'],'dir')
+    if ~exist([cfg.out_models_path, '/cfg'],'dir')
 		mkdir([cfg.out_models_path, '/cfg'])
 	end
 	save([cfg.out_models_path, '/cfg/cfg_' num2str(cfg.imgnum) '.mat'], 'cfg');
