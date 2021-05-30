@@ -13,17 +13,18 @@ addpath('./MultiMatchToolbox/')
 %addpath('../data_analysis/utils/')
 %addpath('../dynamic_models/utils/')
 %addpath('../data_analysis/utils/heatmap_code/')
+
 %addpath('../compare_models')
 
-src_path = '../new_data/new_matrix/';
+src_path = '../../data_subjects/data_final/';
 
 % no esta
 aux=dir('../matrix/images/*.mat');    filenames_img = {aux.name}'; Nimg = length(filenames_img);
 aux=dir('../matrix/subjects/*.mat');  filenames_subj = {aux.name};
 clear aux
 
-load(strcat(src_path,'info_all_subj.mat'));
-[ids_subjs, ~, subj_order]   = unique({info_per_subj_final(:).subj});
+load(strcat(src_path, 'info_all_subj.mat'));
+[ids_subjs, ~, subj_order]  = unique({info_per_subj_final(:).subj});
 subj_order                  = subj_order'; % {info_per_subj_final.subj}
 Nsubj                       = length(unique(subj_order));
 Ntr                         = length(info_per_subj_final);
@@ -32,7 +33,7 @@ Ntr                         = length(info_per_subj_final);
 guardar = 1;
 graficar = 1;
 
-trials_tmp                      = load(strcat(src_path,'info_all_subj.mat'));
+trials_tmp                      = load(strcat(src_path, 'info_all_subj.mat'));
 [ids_images, ~, images_order]   = unique({trials_tmp.info_per_subj_final(:).image_name});
 images_order                    = images_order';
 image_size                      = trials_tmp.info_per_subj_final(1).image_size;
@@ -81,23 +82,13 @@ for ind_img=1:Nimg
                             % if target was found and fix is in range for subj_j
                             fprintf('\n img_id: %d, subj1_id: %d, subj2_id: %d\n', ind_img, subj_i, subj_j)
                             
-                            %tmp_distance = scanpathDistance(info_per_img(subj_i).fixations_matrix_reduced,...
-                            %                                            info_per_img(subj_j).fixations_matrix_reduced,...
-                            %                                            grid_size);
-                            
-                            
+                            % reduced grid
                             %[data1, data2] = createTrialArrayMM(subj_i, subj_j, img_id, info_per_img);
-                            
-                            [data1, data2] = createTrialArrayMM(subj_i, subj_j, img_id, info_per_img, false);
-                            
-                            % FIX poner un try y agarrar ambos problemas
-                            % para ya solucionar, 1 - menos de una fix, 2 -
-                            % no coincidencia de los tamaños entre las
-                            % grillas reducidas y el scanpath original
-                            
                             %tmp_distance = doComparison(data1,data2, [25 33], 0);
-                            tmp_distance = doComparison(data1,data2, [1024,768], 0);
                             
+                            % original size
+                            [data1, data2] = createTrialArrayMM(subj_i, subj_j, img_id, info_per_img, false);
+                            tmp_distance = doComparison(data1,data2, [1024,768], 0);
                             
                             if ~isnan(tmp_distance)
                                 %distance(subj_i, subj_j) = tmp_distance;
