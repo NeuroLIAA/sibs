@@ -24,7 +24,7 @@ profile on
 % main(incfg)
 
 % Flat
-incfg.dinamic_model   = 'geisler';
+incfg.dinamic_model   = 'greedy';
 incfg.iniimg 	      = 1;
 incfg.endimg          = 134;
 incfg.delta           = 32;
@@ -37,8 +37,8 @@ incfg.norm_cdf_tolerance = 0.0001;
 incfg.parfor = 1;
 main(incfg)
 
-p = profile('info');
-save profiles/interp p
+% p = profile('info');
+% save profiles/interp p
 
 % 
 % incfg.dinamic_model   = 'greedy';
