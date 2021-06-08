@@ -1,4 +1,4 @@
-% Figure 4 - MultiMatch comparison
+% Figure 4 - MultiMatch calculations
 clc
 clear all
 
@@ -21,13 +21,14 @@ Ntr                         = length(info_per_subj_final);
 % save metrics
 guardar = 1;
 
-trials_tmp                      = load(strcat(src_path, 'info_all_subj.mat'));
-[ids_images, ~, images_order]   = unique({trials_tmp.info_per_subj_final(:).image_name});
-images_order                    = images_order';
-image_size                      = trials_tmp.info_per_subj_final(1).image_size;
-delta                           = 32;
-grid_size                       = image_size/delta;
-trials                          = reduce_scanpaths(trials_tmp.info_per_subj_final, delta, image_size);
+trials_tmp                    = load(strcat(src_path, 'info_all_subj.mat'));
+[ids_images, ~, images_order] = unique({trials_tmp.info_per_subj_final(:).image_name});
+images_order                  = images_order';
+image_size                    = trials_tmp.info_per_subj_final(1).image_size;
+delta                         = 32;
+grid_size                     = image_size/delta;
+trials                        = reduce_scanpaths(trials_tmp.info_per_subj_final, delta, image_size);
+multimatch_names              = {'vectorSim','directionSim','lengthSim','positionSim','durationSim'};
 clear trials_tmp
 
 %% 1 - Calculate MM between subjects for each image (BH)
@@ -96,17 +97,20 @@ for ind_img=1:Nimg
         mean_shape_sim(ind_img,subj_i) = mean(tmp_shape); 
     end
 
-    if length(distance) <= 1
+    if length(distance_img) <= 1
         imagenes_revisar = [imagenes_revisar, ind_img];
     else
-        mean_dist_img(ind_img,:)    = nanmean(distance,1)';
-        std_dist_img(ind_img,:)     = nanstd(distance,0,1)';
+        mean_dist_img(ind_img,:)    = nanmean(distance_img,1)';
+        std_dist_img(ind_img,:)     = nanstd(distance_img,0,1)';
     end    
 end
 
 %% save 
 
 multimatch_bh = [index, distance];
+multimatch_bh = array2table(multimatch_bh);
+index_names   = {'subj1_id', 'subj2_id', 'img_id'};
+multimatch_bh.Properties.VariableNames = [index_names, multimatch_names];
 
 if guardar
     save('results_metrics/mm_bh_reduced.mat', 'multimatch_bh', 'mean_dist_img', 'std_dist_img')
@@ -121,6 +125,7 @@ min_fix     = 2;
 max_fix     = 13;
 image_size  = [768 1024];
 models = fun_define_models('searchers-deepgaze');
+%models = fun_define_models('priors-correlation');
     
 % for ind_model=1:length(models)
 %     models(ind_model).mean_dist_img   = nan(Nimg,Nsubj);
@@ -132,71 +137,77 @@ models = fun_define_models('searchers-deepgaze');
 
 %% 2 - b
 
-ind_model = 1;
-for ind_img=1:Nimg
-    img_id = ids_images{ind_img};
-    info_per_img = trials(strcmp({trials.image_name}, img_id));
+for ind_model = 1:length(models)
+    for ind_img=1:Nimg
+        img_id = ids_images{ind_img};
+        info_per_img = trials(strcmp({trials.image_name}, img_id));
 
-    % filter 
-    ind_subj_target_found = arrayfun(@(x) (x.target_found && ...
-                                        (length(x.fixations_matrix_reduced(:,1)) >= min_fix && ...
-                                        length(x.fixations_matrix_reduced(:,1)) <= max_fix) ), info_per_img);
-    % load variable "cfg"
-    path_cfg = sprintf('../results_models/%s/%s/%s/cfg/cfg_%d.mat',...
-                    models(ind_model).prior,...
-                    models(ind_model).searcher,...
-                    models(ind_model).params,...
-                    ind_img);
-    load(path_cfg)
+        % filter 
+        ind_subj_target_found = arrayfun(@(x) (x.target_found && ...
+                                            (length(x.fixations_matrix_reduced(:,1)) >= min_fix && ...
+                                            length(x.fixations_matrix_reduced(:,1)) <= max_fix) ), info_per_img);
+        % load variable "cfg"
+    %     path_cfg = sprintf('../results_models/%s/%s/%s/cfg/cfg_%d.mat',...
+    %                     models(ind_model).prior,...
+    %                     models(ind_model).searcher,...
+    %                     models(ind_model).params,...
+    %                     ind_img);
+    %     load(path_cfg)
 
-    % load variable "scanpath"
-    path_scanpath = sprintf('../results_models/%s/%s/%s/scanpath/scanpath_%d.mat',...
-                    models(ind_model).prior,...
-                    models(ind_model).searcher,...
-                    models(ind_model).params,...
-                    ind_img);
-    load(path_scanpath)
-    
-    % check they are the same video
-    s
+        % load variable "scanpath"
+        path_scanpath = sprintf('../results_models/%s/%s/%s/scanpath/scanpath_%d.mat',...
+                        models(ind_model).prior,...
+                        models(ind_model).searcher,...
+                        models(ind_model).params,...
+                        ind_img);
+        load(path_scanpath)
 
-    if (size(scanpath,1) <= max_fix)
-        distance = nan(Nsubj,5);
-        for subj_i=1:length(info_per_img)
-            if ind_subj_target_found(subj_i)
+        % check they are the same video
 
-                fprintf('\n img_id: %d, subj1_id: %d, model: %s\n', ind_img, subj_i,  models(ind_model).name)
 
-                sdata_model = [scanpath, 100*ones(length(scanpath),1)]; %con los filtros length deberia ser igual o mayor a 2
+        if (size(scanpath,1) <= max_fix)
+            distance = nan(Nsubj,5);
+            for subj_i=1:length(info_per_img)
+                if ind_subj_target_found(subj_i)
 
-                sdata_subj = [info_per_img(subj_i).x_grid,...
-                                info_per_img(subj_i).y_grid,...
-                                100*ones(length(info_per_img(subj_i).x_grid),1)];
-                
-                tmp_distance = doComparison(sdata_model, sdata_subj, [768 1024], 0);
+                    fprintf('\n img_id: %d, subj1_id: %d, model: %s\n', ind_img, subj_i,  models(ind_model).name)
 
-                if tmp_distance(1,1) ~= 0
-                    distance(subj_i,:) = tmp_distance;
+                    sdata_model = [scanpath+1, 100*ones(length(scanpath),1)]; %con los filtros length deberia ser igual o mayor a 2
+
+                    sdata_subj = [info_per_img(subj_i).x_grid+1,...
+                                    info_per_img(subj_i).y_grid+1,...
+                                    100*ones(length(info_per_img(subj_i).x_grid),1)];
+
+                    tmp_distance = doComparison(sdata_model, sdata_subj, grid_size+2, 0);
+
+                    if tmp_distance(1,1) ~= 0
+                        distance(subj_i,:) = tmp_distance;
+                    end
                 end
             end
+
+            models(ind_model).adentro_subj(ind_img)   = sum(ind_subj_target_found);
+            % los eliminados que lo encontraron pero tienen mas de
+            % max_fix y menos de min_fix
+            models(ind_model).eliminados_subj(ind_img)= sum(~ind_subj_target_found & [info_per_img.target_found]);
+
+            %guardo la distancia por imagen 
+            models(ind_model).mean_dist_img(ind_img,:)    = nanmean(distance)';
+            models(ind_model).std_dist_img(ind_img,:)     = nanstd(distance)';
+        else
+            models(ind_model).mean_dist_img(ind_img,:)    = nan(1,5);
+            models(ind_model).std_dist_img(ind_img,:)     = nan(1,5);
         end
-
-        models(ind_model).adentro_subj(ind_img)   = sum(ind_subj_target_found);
-        % los eliminados que lo encontraron pero tienen mas de
-        % max_fix y menos de min_fix
-        models(ind_model).eliminados_subj(ind_img)= sum(~ind_subj_target_found & [info_per_img.target_found]);
-
-        %guardo la distancia por imagen 
-        models(ind_model).mean_dist_img(ind_img,:)    = nanmean(distance)';
-        models(ind_model).std_dist_img(ind_img,:)     = nanstd(distance)';
-    else
-        models(ind_model).mean_dist_img(ind_img,:)    = nan(1,5);
-        models(ind_model).std_dist_img(ind_img,:)     = nan(1,5)';
+    end
+    for ind_mm =1:length(multimatch_names)
+        fname = multimatch_names(ind_mm);
+        models(ind_model).(fname{1}) =  models(ind_model).mean_dist_img(:,ind_mm);
     end
 end
 
-%% Summary
+%% save
 
-mm_mean = nanmean(models(ind_model).mean_dist_img);
-mm_std  = nanstd(models(ind_model).mean_dist_img);
-gold_standard = mean(mean_dist_img);
+if guardar
+    disp('guardando variables...')
+    save('results_metrics/mm_hm_reduced_searchers.mat', 'models', 'min_fix', 'max_fix')
+end
