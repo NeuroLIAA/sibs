@@ -1,6 +1,7 @@
 # Folders
 MatlabCode/out_models/
-MatlabCode/results/results*
+MatlabCode/results/results_models/*
+MatlabCode/results/figs/*
 MatlabCode/cache/
 
 # Out models and zips
