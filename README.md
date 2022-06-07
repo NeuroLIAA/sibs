@@ -1,18 +1,7 @@
-# A Bayesian framework for visual search in natural stimuli
+# Modeling Human Visual Search in Natural Scenes: A Combined Bayesian Searcher and Saliency Map Approach
 
-This repository contains the code for the paper [*Modeling human visual search: A combined Bayesian searcher and saliency map approach for eye movement guidance in natural scenes*](https://arxiv.org/pdf/2009.08373) presented in [Shared Visual Representations in Human & Machine Intelligence,
+This repository contains the code for the paper [Modeling Human Visual Search in Natural Scenes: A Combined Bayesian Searcher and Saliency Map Approach](https://www.frontiersin.org/articles/10.3389/fnsys.2022.882315/full). Previously the [preprint](https://arxiv.org/pdf/2009.08373) was presented in [Shared Visual Representations in Human & Machine Intelligence,
 2020 NeurIPS Workshop (Dec 12, 2020)](https://www.svrhm.com/)
-
-Please cite with the following BibTeX: 
-
-'''
-@article{sclar2020modeling,
-  title={Modeling human visual search: A combined Bayesian searcher and saliency map approach for eye movement guidance in natural scenes},
-  author={Sclar, Melanie and Bujia, Gast{\'o}n and Vita, Sebasti{\'a}n and Solovey, Guillermo and Kamienkowski, Juan Esteban},
-  journal={arXiv preprint arXiv:2009.08373},
-  year={2020}
-}
-'''
 
 # Environment
 The model was tested on Matlab 2016 and higher.
@@ -36,12 +25,23 @@ To run the IBS model or any of the variants, run the *run\_main.m* script inside
 
 For more info about the parameters check *BayesianSaliencyModel.m*.
 
-## Use Searchers with different datasets
-
-TODO
-
-## Links for calculating saliency
-
-TODO
+## Replicate paper results
 
 ## Example
+
+# Cite us
+
+Please cite with the following BibTeX: 
+
+```
+@article{Bujia2022vsearch,
+author = {Bujia, Gaston and Sclar, Melanie and Vita, Sebastian and Solovey, Guillermo and Kamienkowski, Juan Esteban},
+doi = {10.3389/fnsys.2022.882315},
+issn = {1662-5137},
+journal = {Frontiers in Systems Neuroscience},
+title = {{Modeling Human Visual Search in Natural Scenes: A Combined Bayesian Searcher and Saliency Map Approach}},
+url = {https://www.frontiersin.org/article/10.3389/fnsys.2022.882315},
+volume = {16},
+year = {2022}
+}
+```
