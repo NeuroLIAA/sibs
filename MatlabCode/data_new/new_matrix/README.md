@@ -1,6 +1,6 @@
 # Experimental data
 
-In folders `sinfo_img` and `sinfo_sub` can be found the anonymized behavioral data grouped by image and by subject respectively. 
+In folders `sinfo_img` and `sinfo_subj` can be found the anonymized behavioral data grouped by image and by subject respectively. 
 
 The aggregated data can be found on the file `info_all_subj.mat`.
 
