@@ -2,13 +2,13 @@ clear all
 close all
 clc
 
-addpath('./utils/')
-addpath('../data_analysis/utils/')
-addpath('../data_analysis/utils/heatmap_code/')
-addpath('../dynamic_models/utils')
+addpath('../../utils/')
+%addpath('../../data_analysis/utils/')
+%addpath('../../data_analysis/utils/heatmap_code/')
+addpath('../../dynamic_models/utils')
 
-load('../matrix/initial_fixations.mat');
-src_path = '../new_data/new_matrix/';
+load('../../matrix/initial_fixations.mat');
+src_path = '../../data_subjects/data_final/';
 load(strcat(src_path,'info_all_subj.mat'))
 [subjects, ~, subj_order] = unique({info_per_subj_final(:).subj});
 subj_order  = subj_order'; % {info_per_subj.subj}

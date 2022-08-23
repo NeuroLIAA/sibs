@@ -1,0 +1,19 @@
+{
+	"img_id" : "grayscale_100_oliva.jpg",
+	"subj_id" : "AFR",
+	"scanpath_x" : 
+	[
+		15,
+		17,
+		25
+	],
+	"scanpath_y" : 
+	[
+		12,
+		13,
+		14
+	],
+	"target_found" : 1,
+	"grid_pad_y" : 26,
+	"grid_pad_x" : 34
+}

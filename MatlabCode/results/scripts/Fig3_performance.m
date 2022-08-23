@@ -19,7 +19,7 @@ Nsubj                       = length(unique(subj_order));
 Ntr                         = length(info_per_subj_final);
 
 % save metrics
-guardar = 1;
+guardar = 0;
 
 trials_tmp                      = load(strcat(src_path, 'info_all_subj.mat'));
 [ids_images, ~, images_order]   = unique({trials_tmp.info_per_subj_final(:).image_name});
@@ -88,7 +88,11 @@ humans_data_subj.proportion             = P_target_found;
 
 %% Models data
 
-models = fun_define_models('searchers-deepgaze');
+% models = fun_define_models('priors-correlation');
+% models = fun_define_models('searchers-deepgaze-ssim');
+models = fun_define_models('priors-ssim');
+% models = fun_define_models('priors-ibs');
+% models = fun_define_models('searchers-deepgaze');
 
 % Number of fixations predicted by the models
 for ind_model = 1:length(models)
@@ -109,7 +113,7 @@ for ind_model = 1:length(models)
 end
 
 % Proportion of targets found as function of the number of saccades allowed for the models
-exps_thr = nan(Nimg,Nsubj);
+exps_thr = nan(Nimg, Nsubj);
 for ind_img=1:Nimg % images
     path = char(strcat(src_path,'sinfo_img/info_per_img_', num2str(ind_img), '.mat')); 
 %     fprintf('%s\n',path);
@@ -197,6 +201,7 @@ figure(2); clf
     ax.Position = [left bottom ax_width ax_height];
         hold on
             boxplot(P_target_found,'Notch','on','Color','k','Labels',[2,4,8,12])
+            
             for ind_model=1:length(models)
                 [correct, M_f, N_f,Pc] = fun_evaluate_experiment(models(ind_model).Nfix_img_model, 57);
                 plot(nanmean(Pc'),'.-','Color',models(ind_model).cols,'LineWidth',1.5)
@@ -222,7 +227,7 @@ figure(2); clf
 %             set(gcf,'position',[x0,y0,width,height])
 
 
-% Fig 4B: Number of fixations needed to find the target (models and humans)
+% %Fig 4B: Number of fixations needed to find the target (models and humans)
 %     ha(2)=axes('Position',[0.575 0.650 0.300 0.300]); 
 %    subplot(3,1,2)
 %        hold on
@@ -242,7 +247,21 @@ figure(2); clf
 %        set(gca,'XLim',[0 13])
 %        xlabel('Number of saccades (to find the target)')
 %        ylabel('Frequency')
-
+% 
 %    subplot(3,1,3)
 %    subplot(2,1,2)
 %    ha(2)=axes('Position',[0.117 0.075 0.817 0.40]);
+
+%% Save
+
+if 1
+%     FigName    = 'correlation-prior';
+    FigName    = 'ssim-prior';
+%     FigName    = 'ibs-prior';
+%     FigName    = 'searchers';
+    FolderName = '/home/gastonb/Imágenes/figpaper/fig3/';   % Your destination folder
+    FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
+    FigHandle = FigList(1);
+    saveas(FigHandle, strcat(FolderName, FigName, '.svg'));
+    print(gcf,strcat(FolderName, FigName,'.png'),'-dpng','-r400')
+end

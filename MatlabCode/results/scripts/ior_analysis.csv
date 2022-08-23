@@ -1,0 +1,15 @@
+name,count_revisits,nscanpath_revisit,total_fixs
+cIBS+DGII,4,2,1132
+IBS+DGII,0,0,978
+Greedy+DGII,8,4,1231
+SaliencyB.,4,2,3208
+IBS+Flat,0,0,677
+IBS+Center,0,0,1405
+IBS+Noisy,0,0,987
+cIBS+Center,6,3,1560
+cIBS+Flat,4,2,1087
+cIBS+Noisy,0,0,1566
+sIBS+DGII,0,0,1057
+sIBS+Center,0,0,1542
+sIBS+Noisy,0,0,1263
+sIBS+Flat,0,0,896

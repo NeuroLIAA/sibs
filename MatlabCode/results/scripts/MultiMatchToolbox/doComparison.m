@@ -63,10 +63,16 @@ else %if data are acceptable for use
     
     %get data from the two arrays that are smaller than the confines of 
     %the screen (greater than 0, less than screen size)
-    bx1=data1(:,1)>0 & data1(:,1) <sz(1); 
-    bx2=data2(:,1)>0 & data2(:,1) <sz(1);
-    by1=data1(:,2)>0 & data1(:,2) <sz(2);
-    by2=data2(:,2)>0 & data2(:,2) <sz(2);
+    
+    bx1=data1(:,1)>=0 & data1(:,1) <=sz(1); 
+    bx2=data2(:,1)>=0 & data2(:,1) <=sz(1);
+    by1=data1(:,2)>=0 & data1(:,2) <=sz(2);
+    by2=data2(:,2)>=0 & data2(:,2) <=sz(2);
+    
+    %bx1=data1(:,1)>0 & data1(:,1) <sz(1); 
+    %bx2=data2(:,1)>0 & data2(:,1) <sz(1);
+    %by1=data1(:,2)>0 & data1(:,2) <sz(2);
+    %by2=data2(:,2)>0 & data2(:,2) <sz(2);
     
 
     %return NaN if any fixations go out of bounds

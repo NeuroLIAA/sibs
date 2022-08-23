@@ -16,15 +16,15 @@ close all
 clc
 
 % addpath('~/Dropbox/my_functions/')
-mainpath = '../'; %GB
-src_path = strcat(mainpath,'new_data/new_matrix/'); 
+mainpath = '../../'; %GB
+src_path = strcat(mainpath,'data_subjects/data_final/'); 
 % mainpath = '../'; %JK
 addpath('./utils/')
-addpath([mainpath 'data_analysis/utils/'])
-addpath([mainpath 'data_analysis/utils/heatmap_code/'])
+%addpath([mainpath 'data_analysis/utils/'])
+%addpath([mainpath 'data_analysis/utils/heatmap_code/'])
 addpath([mainpath 'dynamic_models/utils'])
-addpath([mainpath 'PaperFigures/'])
-addpath([mainpath 'compare_models/'])
+addpath([mainpath 'results/scripts/new_PaperFigures/utils/'])
+%addpath([mainpath 'compare_models/'])
 load([mainpath 'matrix/initial_fixations.mat']);
 load([src_path 'info_all_subj.mat']);
 
@@ -62,7 +62,7 @@ imgnames = unique({info_per_subj.image_name});
 % solo un trial
 % Buenas imagenes(cIBS+DG): 57, 32, 78, 53, 97, 9
 
-models = fun_define_models_tmp(4); 
+models = fun_define_models('searchers-deepgaze'); 
 ind_model = 3; 
 tr = 78;
 Nsubj_plot = 4; % Amount of scanpaths to plot (x2)
@@ -70,7 +70,7 @@ Nsubj_plot = 4; % Amount of scanpaths to plot (x2)
 fprintf('\nModel: %s\n',models(ind_model).name);
 fprintf('Image: %s\n', imgnames{tr});
 info = info_per_subj( strcmp({info_per_subj.image_name},imgnames{tr}) );
-path = fullfile(mainpath,sprintf('out_models/%s/%s/%s/scanpath/scanpath_%d.mat',...
+path = fullfile(sprintf('../results_models/%s/%s/%s/scanpath/scanpath_%d.mat',...
                             models(ind_model).prior,...
                             models(ind_model).searcher,...
                             models(ind_model).params,...
@@ -107,7 +107,7 @@ figure(tr); clf;
         hc(4) = plot(100,100,'.','MarkerSize',30,'Color',c(76,:)); 
         hc(5) = plot(100,100,'.','MarkerSize',30,'Color',c(100,:)); 
 
-        im = imread([mainpath 'images/' info(1).image_name]);
+        im = imread([mainpath 'data_images/images/' info(1).image_name]);
         imagesc(im); colormap gray
 
         ini_pos = initial_fixations( strcmp({initial_fixations.image},imgnames{tr}) ).initial_fix;
