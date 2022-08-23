@@ -1,4 +1,4 @@
-function [idx_x, idx_y] = bayesian_model(cfg, T, p, visibility_map)
+function [idx_x, idx_y, detectability_map] = bayesian_model(cfg, T, p, visibility_map)
 %     global dame1 dame2
     alpha = 1;
     if cfg.parfor
@@ -17,6 +17,7 @@ function [idx_x, idx_y] = bayesian_model(cfg, T, p, visibility_map)
            accum2(c,T) = nansum(nansum(p(:,:,T) .* tmp));
         end
         accum = reshape(accum2, cfg.size_prior(1),cfg.size_prior(2),cfg.nsaccades_thr);
+        detectability_map = accum(:,:,T);
     else
         accum = zeros(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
         tmp = zeros(cfg.size_prior(1), cfg.size_prior(2));
@@ -31,9 +32,8 @@ function [idx_x, idx_y] = bayesian_model(cfg, T, p, visibility_map)
                 accum(kx,ky,T) = nansum(nansum(p(:,:,T) .* tmp));
             end
         end
-        
+        detectability_map = accum(:,:,T);
     end
-
     
 %     dame1 = [dame1 reshape(p(:,:,T),1,[])];
 %     dame2 = [dame2 reshape(tmp,1,[])];

@@ -1,4 +1,4 @@
-function output = main(incfg)
+function out=main_debug(incfg)
     % Load data
     addpath(genpath('utils/'));
     load('../matrix/initial_fixations.mat');
@@ -14,27 +14,27 @@ function output = main(incfg)
         cfg.b               = 4;            % integers (?)
         cfg.iniimg          = 1;            % integers (?)
     else
-        if ~isfield(incfg,'static_model') || isempty(incfg.static_model)
-            cfg.static_model = 'deepgaze'; 
+        if ~isfield(incfg,'static_model') || isempty(incfg.static_model); 
+            cfg.static_model = 'mlnet'; 
         else
             cfg.static_model = incfg.static_model;
         end
-        if ~isfield(incfg,'dinamic_model') || isempty(incfg.dinamic_model)
+        if ~isfield(incfg,'dinamic_model') || isempty(incfg.dinamic_model); 
             cfg.dinamic_model = 'correlation'; 
         else
             cfg.dinamic_model = incfg.dinamic_model;
         end        
-        if ~isfield(incfg,'delta') || isempty(incfg.delta)
+        if ~isfield(incfg,'delta') || isempty(incfg.delta); 
             cfg.delta = 32; 
         else
             cfg.delta = incfg.delta;
         end        
-        if ~isfield(incfg,'a') || isempty(incfg.a)
+        if ~isfield(incfg,'a') || isempty(incfg.a);
             cfg.a = 3;
         else
             cfg.a = incfg.a;
         end
-        if ~isfield(incfg,'b') || isempty(incfg.b)
+        if ~isfield(incfg,'b') || isempty(incfg.b); 
             cfg.b = 4;
         else
             cfg.b = incfg.b;
@@ -90,23 +90,15 @@ function output = main(incfg)
     end
     
     cfg.img_quantity    = 134;
-    cfg.nsaccades_thr   = 15; 
+    cfg.nsaccades_thr   = 15; %10; 
     cfg.target_size     = [72 72];
     cfg.image_size      = [768 1024];
     cfg.out_models_path = ['../out_models/' cfg.static_model '/' cfg.dinamic_model '/a_' num2str(cfg.a) '_b_' num2str(cfg.b) '_tam_celda_' num2str(cfg.delta)];
     
-    % set the amount of images to use
     if ~isfield(incfg,'endimg') || isempty(incfg.endimg)     
         cfg.endimg    = 134;
     else
         cfg.endimg    = incfg.endimg;
-    end
-    
-    % debug mode on or off - for printing and logging more variables
-    if ~isfield(incfg,'debug') || isempty(incfg.debug)     
-        cfg.debug = 0;
-    else
-        cfg.debug = incfg.debug;
     end
     
     if ~exist(cfg.out_models_path,'dir') 
@@ -134,11 +126,7 @@ function output = main(incfg)
 
             % Run bayesian model
             tic;
-            if cfg.debug
-                output = bayesianSaliencyModel_debug(cfg); % This function saves ...
-            else
-                bayesianSaliencyModel(cfg);
-            end
+            out = bayesianSaliencyModel_debug(cfg); % This function saves ...
             tiempo = toc;
             fprintf('\ntiempo: %d  \n', tiempo);
             img_time = [img_time tiempo];
@@ -155,7 +143,7 @@ function output = main(incfg)
 
         % Run bayesian model
         tic;
-        bayesianSaliencyModel(cfg); % This function saves ...
+        out = bayesianSaliencyModel_debug(cfg); % This function saves ...
         tiempo = toc;
         fprintf('\ntiempo: %d  \n', tiempo);
         img_time = [img_time tiempo];

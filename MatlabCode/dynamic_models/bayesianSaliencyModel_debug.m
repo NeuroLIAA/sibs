@@ -1,4 +1,4 @@
-function [] = bayesianSaliencyModel(cfg)
+function out = bayesianSaliencyModel_debug(cfg)
     % BAYESIANSALIENCYMODEL: visual search model based on Najemnik and Geisler 2005
     
     % Input:
@@ -65,6 +65,7 @@ function [] = bayesianSaliencyModel(cfg)
     f = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     p = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     W = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
+    detectability_map = nan(cfg.size_prior(1), cfg.size_prior(2), cfg.nsaccades_thr);
     
     fprintf('   Saccade: ');
     for T = 1:cfg.nsaccades_thr
@@ -86,14 +87,17 @@ function [] = bayesianSaliencyModel(cfg)
         
         % save the probability map
         probability_map = p(:,:,T);
-	if ~exist([cfg.out_models_path, '/probability_map'],'dir')
-		mkdir([cfg.out_models_path, '/probability_map'])
-	end
-        save([cfg.out_models_path, '/probability_map/probabilityMap_Image_' num2str(cfg.imgnum) '_Saccade_' num2str(T) '.mat'], 'probability_map');
-        
+        if ~exist([cfg.out_models_path, '/probability_map'],'dir')
+            mkdir([cfg.out_models_path, '/probability_map'])
+        end
+            save([cfg.out_models_path, '/probability_map/probabilityMap_Image_' num2str(cfg.imgnum) '_Saccade_' num2str(T) '.mat'], 'probability_map');
+
         % compute the next fix
-        [idx_x, idx_y] = nextFix(cfg, T, p, visibility_map);
+        [idx_x, idx_y, d_map] = nextFix(cfg, T, p, visibility_map);
         k(T+1, :) = [idx_x idx_y];
+
+        % save the detectability map
+        detectability_map(:,:,T) = d_map; 
         
         % finish search if target was found
         if cfg.target_center_top_left(1) <= k(T+1,1) && k(T+1,1) <= cfg.target_center_bot_right(1) && ...
@@ -121,5 +125,12 @@ function [] = bayesianSaliencyModel(cfg)
 		mkdir([cfg.out_models_path, '/cfg'])
 	end
 	save([cfg.out_models_path, '/cfg/cfg_' num2str(cfg.imgnum) '.mat'], 'cfg');
-%    keyboard
+
+    out.s = s;
+    out.k = k;
+    out.p = p;
+    out.W = W;
+    out.detectability_map = detectability_map;
+    out.scanpath = scanpath;
+    
 end

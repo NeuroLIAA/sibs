@@ -65,6 +65,27 @@ function W = templateResponse(cfg, visibility_map)
         % visibility_map is in [0, 1]
         Mu = mu .* (visibility_map + 0.5) + rep_corr .* (1 - visibility_map + 0.5);
         Mu = Mu / 2;
+    elseif strcmp(cfg.dinamic_model, 'structuralsim')
+        % Structural Similarity between the image and the target
+        img = imread(['../data_images/images/' cfg.imgname]);
+        tmp = dir(['../data_images/templates/' cfg.imgname(1:end-4) '*']);
+        template = imread(['../data_images/templates/' tmp.name]);
+        
+        % if precalculated load it
+        if exist('../ssim','dir')
+            ssim_val = load(['../ssim/ssimval_pad_' cfg.imgname(1:end-4) '.mat']);
+            ssim_val = ssim_val.ssimval;
+        else
+            ssim_val = calculate_ssim(img, template);
+        end
+        
+        ssim_val = reduceMatrix(ssim_val, cfg.delta, 'max');
+        ssim_val = ssim_val - min(ssim_val(:));
+        ssim_val = ssim_val / max(ssim_val(:)) - 0.5;
+        rep_ssim = repmat(ssim_val, [1, 1, cfg.size_prior(1), cfg.size_prior(2)]);
+        
+        Mu = mu .* (visibility_map + 0.5) + rep_ssim.* (1 - visibility_map + 0.5);
+        Mu = Mu / 2;
     else
         fprintf('Error: Wrong mode \n')
     end
@@ -74,4 +95,4 @@ end
 
 % Geisler only takes into account that visibility affects how well we judge
 % W, but does not think about possible distractors (i.e., elements that
-% look alike the real template). So we can take 
+% look alike the real template) 
