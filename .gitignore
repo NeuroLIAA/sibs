@@ -5,6 +5,7 @@ MatlabCode/results/figs/*
 MatlabCode/cache/
 MatlabCode/results/*.tar.xz
 
-# Out models and zips
+# Out models, zips, tar and temporals
 *.zip
 *.tar.xz
+*.m~
