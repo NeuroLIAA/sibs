@@ -25,8 +25,8 @@ profile on
 
 % Flat
 incfg.dinamic_model   = 'geisler';
-incfg.iniimg 	      = 2;
-incfg.endimg          = 2;
+incfg.iniimg 	      = 10;
+incfg.endimg          = 10;
 incfg.delta           = 32;
 incfg.a               = 3;            % integers (?)   
 incfg.b               = 4;            % integers (?)

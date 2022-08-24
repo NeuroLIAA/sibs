@@ -20,7 +20,7 @@ function [] = bayesianSaliencyModel(cfg)
     % cfg.imgname         = Name of the image  
     % cfg.target_center   = Position of the center of the target expressed in pixels
     
-    % initialize cfg.prior (initial probability for each position)
+    % initialize cfg.prior and normalize (initial probability for each position)
     cfg.prior = priors(cfg);
     cfg.prior = cfg.prior / max(cfg.prior(:));
 
@@ -73,13 +73,14 @@ function [] = bayesianSaliencyModel(cfg)
         % to the target to the observer who is fixing his view in (c,d)
         W(:,:,:,:,T) = templateResponse(cfg, visibility_map);        
        
-        % compute p
+        % compute posteriors
         if T == 1
             s(:,:,T) = W(:,:,k(T,1),k(T,2),T) .* (visibility_map(:,:,k(T,1),k(T,2)) .^ 2);
             f(:,:,T) = cfg.prior .* exp(s(:,:,T));
         else
             s(:,:,T) = s(:,:,T-1) + W(:,:,k(T,1),k(T,2),T) .* (visibility_map(:,:,k(T,1),k(T,2)) .^ 2);
-            f(:,:,T) = sumAllProbs * p(:,:,T-1) .* exp(s(:,:,T));
+            %f(:,:,T) = sumAllProbs * p(:,:,T-1) .* exp(s(:,:,T));
+            f(:,:,T) =  cfg.prior.* exp(s(:,:,T));
         end
         f_all_locations = sum(sum(f(:,:,T)));
         p(:,:,T) = f(:,:,T) ./ f_all_locations;
