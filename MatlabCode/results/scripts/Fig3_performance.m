@@ -180,7 +180,7 @@ end
 
 ha=[];
 
-figure(2); clf
+figure(300); clf
     set(gcf,'Color','w')
     %set(gcf,'Position',[565 70 430 970])
     %ha(1)=axes('Position',[0.075 0.550 0.85 0.40]); 

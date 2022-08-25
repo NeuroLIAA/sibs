@@ -100,7 +100,7 @@ not_nan = isfinite(x) & isfinite(y);
 
 close all
 for mm = 1:length(mm_names)
-    figure(mm+1); 
+    figure(mm+400); 
 %         group = [models(1).(mm_names{mm}),... 
 %             models(2).(mm_names{mm}),...
 %             models(3).(mm_names{mm}),...
@@ -163,7 +163,7 @@ close all
 %% SCATTERPLOT Plot multimatch models comparison - searchers
 
 for ind_metric=1:4
-    figure(100+ind_metric)
+    figure(410+ind_metric)
     set(gcf,'Renderer', 'painters', 'Position', [100 100 800 450])
     set(gcf,'Color','w')
         % consider only trials with ...(completar)       
@@ -231,7 +231,7 @@ end
 
 %% all mm mean
 
-figure(100+10)
+figure(420)
     set(gcf,'Renderer', 'painters', 'Position', [100 100 800 450])
     set(gcf,'Color','w')
         % consider only trials with ...(completar)       
@@ -316,7 +316,7 @@ close all
 %% AVERAGE MULTIMATCH Boxplot and scatter ALL multimatch models comparison - searchers
 
 close all
-figure(50); 
+figure(421); 
     group_mm_average = [];
     for mod = 1:length(models)
         group_mm_average = [group_mm_average nanmean(models(mod).mean_dist_img(:,1:4),2)];
@@ -356,7 +356,7 @@ close all
 for mod = 1:length(models)
     x = group_mm_average(:,mod);
     y = nanmean(mean_dist_img(:,1:4),2);
-    figure(50+mod)
+    figure(430+mod)
     line('Color','k','LineStyle','--')
     hold on
     sf = scatter(x,y,[], models(mod).cols, 'filled', 'MarkerFaceAlpha', 0.65);
@@ -404,7 +404,7 @@ close all
 
 %% AVERAGE MULTIMATCH - Corrplot Searchers mean/median multimatch
 
-figure(5); gcf
+figure(450); gcf
     set(gcf,'Color','w')   
 %     set(gcf,'Position',[565 70 430 970])
     y = nanmedian(mean_dist_img, 2);
@@ -481,7 +481,7 @@ save_priors = false;
 %% Plot multimatch models comparison boxplot - priors
 
 for mm = 1:length(mm_names)
-    figure(10+mm)
+    figure(470+mm)
         group = [models(1).(mm_names{mm}),... 
             models(2).(mm_names{mm}),...
             models(3).(mm_names{mm}),...
