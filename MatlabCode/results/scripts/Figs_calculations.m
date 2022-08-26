@@ -1,6 +1,9 @@
 % Figure 4 - MultiMatch calculations
 clc
 clear all
+%%
+
+% function runMultiMatch(model, save)
 
 %%
 addpath('./utils/')
@@ -19,7 +22,7 @@ Nsubj                       = length(unique(subj_order));
 Ntr                         = length(info_per_subj_final);
 
 % save metrics
-guardar = 0;
+guardar = 1;
 
 trials_tmp                    = load(strcat(src_path, 'info_all_subj.mat'));
 [ids_images, ~, images_order] = unique({trials_tmp.info_per_subj_final(:).image_name});
@@ -140,10 +143,12 @@ delta       = 32;
 min_fix     = 2;
 max_fix     = 13;
 image_size  = [768 1024];
-models = fun_define_models('searchers-deepgaze-ssim');
+eval_models = 'all';
+models = fun_define_models(eval_models);
+%models = fun_define_models('searchers-deepgaze-ssim');
 %models = fun_define_models('priors-correlation');
 %models = fun_define_models('ssim');
-% models = fun_define_models('all');
+%models = fun_define_models('all');
 
 % for ind_model=1:length(models)
 %     models(ind_model).mean_dist_img   = nan(Nimg,Nsubj);
@@ -230,5 +235,4 @@ end
 if 1
     disp('Saving variables...')
     save('results_metrics/mm_hm_reduced_5searchers.mat', 'models', 'min_fix', 'max_fix')
-%     save('results_metrics/mm_hm_reduced_all.mat', 'models', 'min_fix', 'max_fix')
 end

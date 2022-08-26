@@ -30,6 +30,18 @@ grid_size                       = image_size/delta;
 trials                          = reduce_scanpaths(trials_tmp.info_per_subj_final, delta, image_size);
 clear trials_tmp
 
+%% Define models to evaluate
+eval_models = 'searchers-deepgaze-ssim';
+
+
+% % 
+% models = fun_define_models('priors-correlation');
+% models = fun_define_models('searchers-deepgaze-ssim');
+% models = fun_define_models('priors-ssim');
+models = fun_define_models('priors-ibs');
+% models = fun_define_models('searchers-deepgaze');
+
+
 %% Calculations: Average number of fixations needed by the observers to find the target
 
 nntrthr     = 15;
@@ -87,12 +99,6 @@ humans_data_subj.target_found_mean      = mean_nsac_target_found_img;
 humans_data_subj.proportion             = P_target_found;
 
 %% Models data
-
-% models = fun_define_models('priors-correlation');
-% models = fun_define_models('searchers-deepgaze-ssim');
-models = fun_define_models('priors-ssim');
-% models = fun_define_models('priors-ibs');
-% models = fun_define_models('searchers-deepgaze');
 
 % Number of fixations predicted by the models
 for ind_model = 1:length(models)
@@ -180,7 +186,7 @@ end
 
 ha=[];
 
-figure(300); clf
+figure(600); clf
     set(gcf,'Color','w')
     %set(gcf,'Position',[565 70 430 970])
     %ha(1)=axes('Position',[0.075 0.550 0.85 0.40]); 

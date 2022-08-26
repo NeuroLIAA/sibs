@@ -119,7 +119,8 @@ function output = main(incfg)
 
     img_time = [];
     fprintf('\n\na: %d; b: %d; Delta: %d \n', cfg.a, cfg.b, cfg.delta);
-    
+    fprintf('\n Model: %s \n', cfg.dynamic_model);  
+    fprintf('\n Prior: %s \n', cfg.static_model);
     % Main loop. Run bayesian model for each image
     % If not image param setted, run 
     if ~isfield(incfg,'image') || isempty(incfg.image) 

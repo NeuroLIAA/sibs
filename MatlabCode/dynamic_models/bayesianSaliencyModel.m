@@ -80,7 +80,7 @@ function [] = bayesianSaliencyModel(cfg)
         else
             s(:,:,T) = s(:,:,T-1) + W(:,:,k(T,1),k(T,2),T) .* (visibility_map(:,:,k(T,1),k(T,2)) .^ 2);
             %f(:,:,T) = sumAllProbs * p(:,:,T-1) .* exp(s(:,:,T));
-            f(:,:,T) =  cfg.prior.* exp(s(:,:,T));
+            f(:,:,T) =  sumAllProbs * cfg.prior.* exp(s(:,:,T));
         end
         f_all_locations = sum(sum(f(:,:,T)));
         p(:,:,T) = f(:,:,T) ./ f_all_locations;

@@ -98,7 +98,7 @@ not_nan = isfinite(x) & isfinite(y);
     
 %% BOXPLOT Plot multimatch models comparison - searchers
 
-close all
+%close all
 for mm = 1:length(mm_names)
     figure(mm+400); 
 %         group = [models(1).(mm_names{mm}),... 
@@ -506,6 +506,7 @@ for mm = 1:length(mm_names)
         hold off
         
         set(gcf,'name', strcat(fig_preffix,mm_names{mm}))
+    pause(0.05);
 end
 
 %% Save priors figs
