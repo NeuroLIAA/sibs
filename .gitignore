@@ -2,6 +2,7 @@
 MatlabCode/all_data/
 MatlabCode/out_models/
 MatlabCode/results/results_models/*
+MatlabCode/results/results_boots/*
 MatlabCode/results/figs/*
 MatlabCode/cache/
 MatlabCode/results/*.tar.xz
