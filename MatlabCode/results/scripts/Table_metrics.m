@@ -312,8 +312,8 @@ tabla_metricas_performance = array2table([...
                                             {models.target_found_distances_new}' {models.target_found_distances_new_std}'...
                                             {models.jacc}' {models.jacc_std}' {models.corr_value}'...
                                             ]);
-index_names = {'Searcher', 'Prior', 'MAgreement', 'MAgreementSD', ...
-                'WDistance', 'WDistanceSD', 'JaccardIndex', 'JaccardISD', 'Corr'};
+index_names = {'Searcher', 'Prior', 'MAgr', 'MAgrSD', ...
+                'WDis', 'WDistSD', 'JaccIn', 'JaccISD', 'Corr'};
 tabla_metricas_performance.Properties.VariableNames = index_names;
 
 tabla_mm = array2table(...
@@ -321,14 +321,14 @@ tabla_mm = array2table(...
                          nanmean([models.positionSim])' nanmean([models.lengthSim])']...
                        );
 
-multimatch_names = {'vectorSim','directionSim','lengthSim','positionSim'};
+multimatch_names = {'vecSim','dirSim','lenSim','posSim'};
 tabla_mm.Properties.VariableNames = multimatch_names;
 
 mm_average = array2table(mean(tabla_mm{:,:},2));
-mm_average.Properties.VariableNames = {'MeanMultiMatch'};
+mm_average.Properties.VariableNames = {'MeanMM'};
 
 tabla_resultados = [tabla_metricas_performance mm_average tabla_mm];
 
 %% Optional, basic portage to LaTeX
 
-% table2latex(tabla_resultados, './results_metrics/tabla_resultados_v2.tex',2)
+table2latex(tabla_resultados, './results_metrics/tabla_resultados.tex',2)

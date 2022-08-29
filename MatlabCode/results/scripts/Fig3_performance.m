@@ -1,6 +1,7 @@
 % Figure 3 - Model Performance
 clc
 clear all
+close all
 
 %%
 addpath('./utils/')
@@ -18,9 +19,6 @@ subj_order                  = subj_order'; % {info_per_subj_final.subj}
 Nsubj                       = length(unique(subj_order));
 Ntr                         = length(info_per_subj_final);
 
-% save metrics
-guardar = 0;
-
 trials_tmp                      = load(strcat(src_path, 'info_all_subj.mat'));
 [ids_images, ~, images_order]   = unique({trials_tmp.info_per_subj_final(:).image_name});
 images_order                    = images_order';
@@ -31,16 +29,29 @@ trials                          = reduce_scanpaths(trials_tmp.info_per_subj_fina
 clear trials_tmp
 
 %% Define models to evaluate
-eval_models = 'searchers-deepgaze-ssim';
+eval_models = 'priors-ibs';
+save_plots  = true;
+models = fun_define_models(eval_models);
 
-
-% % 
-% models = fun_define_models('priors-correlation');
-% models = fun_define_models('searchers-deepgaze-ssim');
-% models = fun_define_models('priors-ssim');
-models = fun_define_models('priors-ibs');
-% models = fun_define_models('searchers-deepgaze');
-
+switch eval_models
+    case '5searchers'
+        short_names    = {'cIBS+DGII','sIBS+DGII','IBS+DGII','Greedy+DGII','SaliencyB.'};
+        fig_name       = 'Fig3_5searcher_performance_';
+        path_to_save   = 'searchers/';
+    case 'priors-correlation'
+        short_names    = {'cIBS+DGII','cIBS+Center','cIBS+Flat','cIBS+Noisy'};
+        fig_name       = 'Fig3_priors_cibs_performance';
+        path_to_save   = 'priors-cIBS/';
+    case 'priors-ssim'
+        load('mm_hm_reduced_priors-ssim.mat')
+        short_names    = {'sIBS+DGII','sIBS+Center','sIBS+Noisy','sIBS+Flat'};
+        fig_name       = 'Fig3_priors_sibs_performance';
+        path_to_save   = 'priors-sIBS/';
+    case 'priors-ibs'
+        short_names    = {'IBS+DGII','IBS+Center','IBS+Noisy','IBS+Flat'};
+        fig_name       = 'Fig3_priors_ibs_performance';
+        path_to_save   = 'priors-IBS/';
+end
 
 %% Calculations: Average number of fixations needed by the observers to find the target
 
@@ -145,8 +156,7 @@ for ind_model=1:length(models)
 %         fprintf('%s\n',path);    
         if ind_img ~= 132
             load(path_scanpath); % scanpath = ( (x,y) , fixation number )
-            
-            % No me convence esto... hacerlo bien. Tengo que empezar con las fijaciones de cero!!!            
+                      
             count       = length(scanpath);% - 1;     % Numero de sacadas
             tmpcountthr = exps_thr(ind_img,:);      % Numero de sacadas permitidas (igual que el experimento).
             tmpcountthr = tmpcountthr(~isnan(tmpcountthr));% Numero de sacadas permitidas (igual que el experimento).
@@ -188,10 +198,6 @@ ha=[];
 
 figure(600); clf
     set(gcf,'Color','w')
-    %set(gcf,'Position',[565 70 430 970])
-    %ha(1)=axes('Position',[0.075 0.550 0.85 0.40]); 
-%    subplot(3,1,1)
-    %    subplot(2,1,1)
     x0=10;
     y0=10;
     width=450;
@@ -217,57 +223,28 @@ figure(600); clf
         names = {models.name};
         [hleg1, icons] = legend(names, 'Location', 'NorthWest', 'FontSize', 11);
         set(gca,'XTickLabels',{'2','4','8','12'})
-%             icon = findobj(icons,'Type','line');
-%             icon = findobj(icon,'Marker','none','-xor');
-%             set(icon,'MarkerSize',30);
-%             pause(0.1)
-%             textobj = findobj(icons, 'type', 'text');
-%             set(textobj, 'fontsize', 12);
+
         xlabel('Number of max saccades')
         ylabel('Proportion of targets found')
         ylim([0 1])
-%             x0=10;
-%             y0=10;
-%             width=470;
-%             height=470;
-%             set(gcf,'position',[x0,y0,width,height])
-
-
-% %Fig 4B: Number of fixations needed to find the target (models and humans)
-%     ha(2)=axes('Position',[0.575 0.650 0.300 0.300]); 
-%    subplot(3,1,2)
-%        hold on
-%            x = 1:15;
-%            y = hist(Nfix_img_mean,x); y = y/sum(y);
-%            plot(x,y,'k-','LineWidth',1.5)
-%            for ind_model=1:length(models)
-%                [~,~,NFix,~] = fun_evaluate_experiment(models(ind_model).Nfix_img_model, 57);
-%                y = hist(nanmean(NFix'),x); y = y/nansum(y); 
-%                 %y = hist(models(ind_model).Nfix_img_model,x); y = y/nansum(y); 
-%                plot(x,y,'-','Color',models(ind_model).cols,'LineWidth',1.5)
-%            end
-%        hold off
-%        box on
-%         %set(gca,'YLim',[0 0.5])
-%        set(gca,'YTick',0:0.1:0.4)
-%        set(gca,'XLim',[0 13])
-%        xlabel('Number of saccades (to find the target)')
-%        ylabel('Frequency')
-% 
-%    subplot(3,1,3)
-%    subplot(2,1,2)
-%    ha(2)=axes('Position',[0.117 0.075 0.817 0.40]);
-
+        set(gcf,'name', fig_name)
+        
 %% Save
 
-if 1
-%     FigName    = 'correlation-prior';
-    FigName    = 'ssim-prior';
-%     FigName    = 'ibs-prior';
-%     FigName    = 'searchers';
-    FolderName = '/home/gastonb/Imágenes/figpaper/fig3/';   % Your destination folder
+if save_plots
+    FolderFigsName = './../figs/';   % Your destination folder
     FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
-    FigHandle = FigList(1);
-    saveas(FigHandle, strcat(FolderName, FigName, '.svg'));
-    print(gcf,strcat(FolderName, FigName,'.png'),'-dpng','-r400')
+    SAVEPATH = strcat(FolderFigsName, path_to_save, 'fig3/');
+        disp('guardando figuras')
+    if ~exist(SAVEPATH,'dir') 
+        mkdir(SAVEPATH);
+    end
+    for iFig = 1:length(FigList)
+      FigHandle = FigList(iFig);
+      FigName   = get(FigHandle, 'Name');
+      savefig(FigHandle, strcat(SAVEPATH, FigName, '.fig'));
+      %saveas(FigHandle, strcat(SAVEPATH, FigName, '.svg'));
+      print(FigHandle,strcat(SAVEPATH, FigName,'.png'),'-dpng','-r400')
+    end
+    close all
 end

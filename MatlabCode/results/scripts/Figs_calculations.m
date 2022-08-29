@@ -21,8 +21,8 @@ subj_order                  = subj_order'; % {info_per_subj_final.subj}
 Nsubj                       = length(unique(subj_order));
 Ntr                         = length(info_per_subj_final);
 
-% save metrics
-guardar = 1;
+% compute metrics for subjects, if false then precomputed are loaded
+computeSubjects = true;
 
 trials_tmp                    = load(strcat(src_path, 'info_all_subj.mat'));
 [ids_images, ~, images_order] = unique({trials_tmp.info_per_subj_final(:).image_name});
@@ -131,10 +131,14 @@ multimatch_bh.Properties.VariableNames = [index_names, multimatch_names];
 
 %% save 
 
-if guardar
+if computeSubjects
+    disp('Computing and saving subjects metrics...')
     save('results_metrics/mm_bh_reduced.mat', 'multimatch_bh', 'mean_dist_img', 'std_dist_img', 'adentro_subj', 'eliminados_subj')
+else
+    disp('Loading precomputed subjects metrics...')
+    load('results_metrics/mm_bh_reduced.mat')
 end
-    
+
 %% 2 - Calculate MM between subjects and model for each image (HM)
 % Verificar siempre que concidan las variables en ambos casos si se carga
 % el archivo de BH
@@ -143,23 +147,9 @@ delta       = 32;
 min_fix     = 2;
 max_fix     = 13;
 image_size  = [768 1024];
-eval_models = 'all';
+eval_models = 'priors-ibs';
 models = fun_define_models(eval_models);
-%models = fun_define_models('searchers-deepgaze-ssim');
-%models = fun_define_models('priors-correlation');
-%models = fun_define_models('ssim');
-%models = fun_define_models('all');
-
-% for ind_model=1:length(models)
-%     models(ind_model).mean_dist_img   = nan(Nimg,Nsubj);
-%     models(ind_model).std_dist_img    = nan(Nimg,Nsubj);
-% 
-%     models(ind_model).eliminados_subj = nan(Nimg,1);
-%     models(ind_model).adentro_subj    = nan(Nimg,1);
-% end
-
-%% 2 - b
-
+%%
 for ind_model = 1:length(models)
     for ind_img=1:Nimg
         img_id = ids_images{ind_img};
@@ -184,10 +174,8 @@ for ind_model = 1:length(models)
                         models(ind_model).params,...
                         ind_img);
         load(path_scanpath)
-
-        % check they are the same video
-
-
+        
+        % compute multimatch
         if (size(scanpath,1) <= max_fix)
             distance = nan(Nsubj,5);
             for subj_i=1:length(info_per_img)
@@ -214,7 +202,7 @@ for ind_model = 1:length(models)
             % max_fix y menos de min_fix
             models(ind_model).eliminados_subj(ind_img)= sum(~ind_subj_target_found & [info_per_img.target_found]);
 
-            %guardo la distancia por imagen 
+            % guardo la distancia por imagen 
             models(ind_model).mean_dist_img(ind_img,:)    = nanmean(distance)';
             models(ind_model).std_dist_img(ind_img,:)     = nanstd(distance)';
         else
@@ -232,7 +220,6 @@ end
 
 %% save
 
-if 1
-    disp('Saving variables...')
-    save('results_metrics/mm_hm_reduced_5searchers.mat', 'models', 'min_fix', 'max_fix')
-end
+disp('Saving variables...')
+save(strcat('results_metrics/mm_hm_reduced_',eval_models,'.mat'), 'models', 'min_fix', 'max_fix')
+    
