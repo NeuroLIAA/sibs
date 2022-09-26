@@ -32,7 +32,7 @@ To use the sIBS model the Structural Similarity map for each image should be pro
 ## Paper's results
 To reproduce the Frontiers' paper results checkout to the frontiers branch, first execute `MatlabCode/dynamic_models/run_paper.m` to calculate all models' scanpaths and then run `run_analysis.m` to replicate figures from the `MatlabCode/results/scripts` folder. Depending on your PC this may take a while (more than a day).
 
-# Cite
+## Cite
 
 Please cite using the following BibTex:
 
