@@ -3,7 +3,7 @@ This repository contains the code for the paper [**Modeling Human Visual Search 
 
 ---
 ## Updates
-* March/2023: For an updated version of this model in Python, please check: \url{https://github.com/FerminT/VisualSearchBenchmark}
+* March/2023: For an updated version of this model in Python, please check: [ViSioNS Benchmark](https://github.com/FerminT/VisualSearchBenchmark)
 ---
 
 ## Abstract
